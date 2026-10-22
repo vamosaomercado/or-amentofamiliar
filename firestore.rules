@@ -1,0 +1,69 @@
+rules_version = '2';
+
+// Orçamento da família — regras do Firestore
+// casas/{casa}            nome, código de convite, membros e configuração
+// casas/{casa}/meses/{m}  os lançamentos de cada mês
+// codigos/{CODIGO}        aponta o código de convite para a casa
+// usuarios/{uid}          em que casa a pessoa está e a agenda do Google dela
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function logado() {
+      return request.auth != null;
+    }
+    function membroDe(casaId) {
+      return logado()
+        && request.auth.uid in get(/databases/$(database)/documents/casas/$(casaId)).data.membros;
+    }
+    // vale para gravações em lote: olha a casa como ela fica depois da gravação
+    function membroDepois(casaId) {
+      return logado()
+        && request.auth.uid in getAfter(/databases/$(database)/documents/casas/$(casaId)).data.membros;
+    }
+
+    // cada pessoa só lê e grava a própria ficha
+    match /usuarios/{uid} {
+      allow read, write: if logado() && request.auth.uid == uid;
+    }
+
+    // quem tem o código consegue achar a casa; ninguém consegue listar os códigos
+    match /codigos/{codigo} {
+      allow get: if logado();
+      allow list: if false;
+      allow create: if logado()
+        && request.resource.data.criadoPor == request.auth.uid
+        && membroDepois(request.resource.data.casa);
+      allow update: if false;
+      allow delete: if membroDe(resource.data.casa);
+    }
+
+    match /casas/{casaId} {
+      allow read: if logado() && request.auth.uid in resource.data.membros;
+
+      allow create: if logado()
+        && request.resource.data.membros == [request.auth.uid]
+        && request.resource.data.criadoPor == request.auth.uid;
+
+      // quem é da casa pode tudo (todos têm os mesmos poderes);
+      // quem não é só pode se colocar para dentro, mostrando um código válido desta casa
+      allow update: if logado() && (
+        request.auth.uid in resource.data.membros
+        || (
+          request.resource.data.diff(resource.data).affectedKeys().hasOnly(['membros', 'membrosInfo'])
+          && request.resource.data.membros == resource.data.membros.concat([request.auth.uid])
+          && request.resource.data.membrosInfo.diff(resource.data.membrosInfo).affectedKeys().hasOnly([request.auth.uid])
+          && get(/databases/$(database)/documents/codigos/$(request.resource.data.membrosInfo[request.auth.uid].codigo)).data.casa == casaId
+        )
+      );
+
+      // só a última pessoa da casa pode apagá-la
+      allow delete: if logado() && resource.data.membros == [request.auth.uid];
+
+      match /meses/{mes} {
+        allow read: if membroDe(casaId);
+        allow write: if membroDepois(casaId);
+      }
+    }
+  }
+}

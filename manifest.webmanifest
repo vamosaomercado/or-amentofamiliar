@@ -1,0 +1,21 @@
+{
+  "name": "Orçamento da família",
+  "short_name": "Orçamento",
+  "description": "O que entra, o que sai, objetivos e agenda de pagamentos da família.",
+  "id": "./",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "lang": "pt-BR",
+  "background_color": "#F4F1EA",
+  "theme_color": "#E9E4D8",
+  "icons": [
+    { "src": "icones/icone-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "icones/icone-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "icones/icone-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ],
+  "shortcuts": [
+    { "name": "Agenda de pagamentos", "short_name": "Agenda", "url": "./#agenda", "icons": [{ "src": "icones/icone-192.png", "sizes": "192x192" }] }
+  ]
+}
