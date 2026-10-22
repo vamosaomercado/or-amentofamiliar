@@ -4080,7 +4080,15 @@ function renderTudo(){
 let auth = null, bd = null, usuario = null, avisoConta = "";
 let casaId = null, casaRef = null, casaInfo = null, pararCasa = [], nuvemPronta = false;
 let ultimo = {config: null, meses: {}}, tNuvem = null, juntarDepois = null;
+const CHAVE_CONVITE = "orcamentoFamilia.convite";      // deixado pela página de instalação
 let codigoDoLink = (new URLSearchParams(location.search).get("codigo") || "").toUpperCase().replace(/[^A-Z0-9]/g, "").slice(0, 8);
+if (!codigoDoLink){
+  try{
+    const c = JSON.parse(localStorage.getItem(CHAVE_CONVITE) || "null");
+    if (c?.codigo && Date.now() - (+c.em || 0) < 14 * 864e5) codigoDoLink = c.codigo;
+  }catch(e){}
+}
+function esquecerConvite(){ codigoDoLink = ""; try{ localStorage.removeItem(CHAVE_CONVITE); }catch(e){} }
 const ALFABETO = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";       // sem I, O, 0 e 1, que se confundem
 const CAMPOS_CONFIG = ["pessoas","grupos","cartoes","objetivos","fixos","fechamento","transportarSobra"];
 const fmtCodigo = c => c ? c.slice(0,4) + "-" + c.slice(4) : "";
@@ -4305,11 +4313,11 @@ function erroCasaTxt(e){
 }
 function linkConvite(codigo){
   const base = location.protocol === "file:" ? "" : location.origin + location.pathname;
-  return base ? base + "?codigo=" + fmtCodigo(codigo) : "";
+  return base ? base.replace(/(index\.html)?$/, "instalar.html") + "?codigo=" + fmtCodigo(codigo) : "";
 }
 function textoConvite(codigo){
   const link = linkConvite(codigo);
-  return "Entre na nossa casa no app Orçamento da família 🏠\nCódigo: " + fmtCodigo(codigo) + (link ? "\n" + link : "");
+  return "Entre na nossa casa no app Orçamento da família 🏠\nCódigo: " + fmtCodigo(codigo) + (link ? "\nInstale por aqui: " + link : "");
 }
 async function compartilharConvite(){
   const codigo = casaInfo?.codigo; if (!codigo) return;
@@ -4394,7 +4402,7 @@ function abrirBoasVindas(){
     <div class="linha-btn"><button class="botao secundario" id="bv-depois">Agora não — usar só neste aparelho</button></div>`, () => {
     $("#modal-corpo").dataset.tela = "boasvindas";
     ligarLogin($("#bv-login"));
-    $("#bv-depois").onclick = () => { prefs.boasVindas = true; salvarPrefs(); codigoDoLink = ""; fecharModal(); };
+    $("#bv-depois").onclick = () => { prefs.boasVindas = true; salvarPrefs(); esquecerConvite(); fecharModal(); };
   });
 }
 function abrirCasaSheet(aba = "criar"){
@@ -4416,7 +4424,8 @@ function montarCasaSheet(aba){
   const cx = $("#f-casa-miolo");
   const local = temConteudo(estado);
   if (aba === "criar"){
-    const primeiro = (usuario.displayName || "").split(" ").filter(Boolean).slice(-1)[0];
+    const nomes = (usuario.displayName || "").split(" ").filter(Boolean);
+    const primeiro = nomes.length > 1 ? nomes[nomes.length - 1] : "";      // sobrenome, quando houver
     cx.innerHTML = `<div class="campo"><label for="f-nome">Nome da casa</label>
         <input id="f-nome" value="${esc(primeiro ? "Casa dos " + primeiro : "Nossa casa")}" enterkeyhint="done"></div>
       ${local ? `<p class="aviso">O que já está lançado neste aparelho vai junto para a casa.</p>` : ""}
@@ -4425,7 +4434,7 @@ function montarCasaSheet(aba){
     $("#f-ok").onclick = async () => {
       const nome = $("#f-nome").value.trim() || "Nossa casa";
       $("#f-ok").disabled = true; $("#f-status").className = "status"; $("#f-status").innerHTML = '<span class="girando"></span>Criando a casa…';
-      try{ await criarCasa(nome); fecharModal(); toast(nome + " criada. Agora é só mandar o código."); irPara("ajustes"); }
+      try{ await criarCasa(nome); esquecerConvite(); fecharModal(); toast(nome + " criada. Agora é só mandar o código."); setTimeout(() => irPara("ajustes"), 150); }
       catch(e){ $("#f-ok").disabled = false; $("#f-status").className = "status erro"; $("#f-status").textContent = erroCasaTxt(e); }
     };
   } else {
@@ -4448,10 +4457,10 @@ function montarCasaSheet(aba){
       const levar = $("#f-levar")?.checked ? clone(estado) : null;
       try{
         const id = await entrarComCodigo(inp.value);
-        codigoDoLink = "";
+        esquecerConvite();
         juntarDepois = levar;
         ligarCasa(id);
-        fecharModal(); toast("Você entrou na casa"); irPara("mes");
+        fecharModal(); toast("Você entrou na casa"); setTimeout(() => irPara("mes"), 150);
       }catch(e){ $("#f-ok").disabled = false; $("#f-status").className = "status erro"; $("#f-status").textContent = erroCasaTxt(e); }
     };
   }

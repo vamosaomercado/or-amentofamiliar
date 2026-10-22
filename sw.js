@@ -3,7 +3,7 @@
 const VERSAO = "orcamento-v1";
 const EXTERNO = VERSAO + "-externo";
 const ESSENCIAIS = [
-  "./", "./index.html", "./manifest.webmanifest",
+  "./", "./index.html", "./instalar.html", "./manifest.webmanifest",
   "./icones/icone-192.png", "./icones/icone-512.png", "./icones/apple-touch-icon.png", "./icones/favicon-32.png"
 ];
 
@@ -24,11 +24,14 @@ self.addEventListener("fetch", ev => {
   if (req.method !== "GET") return;
   const url = new URL(req.url);
 
-  // a página: tenta a rede (para pegar atualizações) e cai no que está guardado
+  // as páginas: tenta a rede (para pegar atualizações) e cai no que está guardado
   if (req.mode === "navigate"){
+    const pagina = /instalar\.html$/.test(url.pathname) ? "./instalar.html" : "./index.html";
     ev.respondWith(
-      fetch(req).then(r => { const copia = r.clone(); caches.open(VERSAO).then(c => c.put("./index.html", copia)); return r; })
-        .catch(() => caches.match("./index.html"))
+      fetch(req).then(r => {
+        if (r.ok){ const copia = r.clone(); caches.open(VERSAO).then(c => c.put(pagina, copia)); }
+        return r;
+      }).catch(() => caches.match(pagina))
     );
     return;
   }

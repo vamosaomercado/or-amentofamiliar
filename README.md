@@ -12,6 +12,7 @@ apagar, convidar, trocar o código, tirar alguém e mudar o nome da casa.
 | Arquivo | Para que serve |
 |---|---|
 | `index.html` | O aplicativo inteiro. **No começo do script fica o que você precisa preencher.** |
+| `instalar.html` | Página de instalação — é o link para divulgar e o que vai no convite |
 | `manifest.webmanifest` | Instalação como aplicativo (nome, cores, ícones) |
 | `sw.js` | Funcionamento sem internet |
 | `icones/` | Ícones do app (192, 512, maskable, iPhone e favicon) |
@@ -63,6 +64,11 @@ O plano gratuito (Spark) dá e sobra para uma família.
 
 Em um ou dois minutos o app estará em `https://seuusuario.github.io/orcamento-familia/`.
 
+Para divulgar, mande a **página de instalação**: `https://seuusuario.github.io/orcamento-familia/instalar.html`.
+Ela reconhece o aparelho (Android, iPhone ou computador) e mostra o passo a passo certo, tem o botão
+**Instalar** quando o navegador permite, avisa quando a pessoa abriu dentro do WhatsApp ou do Instagram
+(de lá não dá para instalar) e traz um QR code para passar de um celular para outro.
+
 ### Ao publicar uma atualização
 
 Troque o número da versão na primeira linha de `sw.js` (`orcamento-v1` → `orcamento-v2`). Sem isso, os
@@ -75,7 +81,8 @@ celulares que já instalaram continuam abrindo a versão guardada.
 1. A primeira pessoa abre o app, entra na conta (Google ou e-mail) e toca em **Criar casa**.
    O que ela já tinha lançado no aparelho vai junto para a casa.
 2. Em **Ajustes (engrenagem) → Casa e conta**, toca em **Enviar convite**. Vai uma mensagem com o código
-   e um link — quem abre o link já encontra o código preenchido.
+   e o link da página de instalação. Quem abre o link instala o app e, ao entrar na conta, já encontra o
+   código preenchido (no iPhone, se não vier preenchido, é só digitar o código que aparece na página).
 3. Quem recebeu entra na própria conta e toca em **Entrar na casa**.
 
 Em **Casa e conta** qualquer pessoa da casa pode:

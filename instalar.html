@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#E9E4D8">
+<title>Instalar · Orçamento da família</title>
+<meta name="description" content="Instale o Orçamento da família no celular: o que entra, o que sai, objetivos e agenda de pagamentos, com a família toda.">
+<meta property="og:title" content="Orçamento da família">
+<meta property="og:description" content="O orçamento da casa, com a família toda, cada um no seu celular.">
+<meta property="og:image" content="icones/icone-512.png">
+<link rel="manifest" href="./manifest.webmanifest">
+<link rel="icon" href="./icones/favicon-32.png" sizes="32x32" type="image/png">
+<link rel="apple-touch-icon" href="./icones/apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+:root{
+  --papel:#F4F1EA; --topo:#E9E4D8; --card:#FFFFFF; --tinta:#1B2126; --fraco:#6C737B; --linha:#E2DDD1;
+  --acento:#C1561A; --acento-suave:#F7E6DB; --acRGB:193,86,26; --positivo:#2F8A5B; --positivo-suave:#E3F1E8; --alerta:#B4404F;
+  --sombra:0 2px 10px rgba(27,33,38,.07);
+}
+@media (prefers-color-scheme:dark){
+  :root{--papel:#11161A; --topo:#182026; --card:#1A2127; --tinta:#E9EDF0; --fraco:#95A0A9; --linha:#2A333B;
+    --acento:#E07A3E; --acento-suave:#2B211B; --acRGB:224,122,62; --positivo:#5FBF8A; --positivo-suave:#17291F; --alerta:#E07383;
+    --sombra:0 2px 12px rgba(0,0,0,.35)}
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+body{background:var(--papel);color:var(--tinta);font-family:"Nunito",system-ui,-apple-system,sans-serif;font-size:15px;line-height:1.5;
+  -webkit-font-smoothing:antialiased;padding-bottom:calc(30px + env(safe-area-inset-bottom))}
+body::before{content:"";position:fixed;inset:0;pointer-events:none;z-index:0;
+  background:repeating-linear-gradient(-45deg,rgba(255,255,255,.55) 0 2px,transparent 2px 22px);opacity:.6}
+@media (prefers-color-scheme:dark){body::before{background:repeating-linear-gradient(-45deg,rgba(255,255,255,.03) 0 2px,transparent 2px 22px);opacity:1}}
+button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
+a{color:inherit}
+.wrap{position:relative;z-index:1;max-width:560px;margin:0 auto;padding:0 16px}
+.icone{width:22px;height:22px;flex:none;stroke:currentColor;stroke-width:1.8;fill:none;stroke-linecap:round;stroke-linejoin:round}
+
+/* capa */
+.capa{position:relative;z-index:1;background:var(--topo);border-radius:0 0 28px 28px;padding:calc(30px + env(safe-area-inset-top)) 16px 26px;
+  text-align:center;box-shadow:0 2px 12px rgba(27,33,38,.06)}
+.capa img{width:96px;height:96px;border-radius:24px;box-shadow:0 12px 28px -12px rgba(var(--acRGB),.7)}
+.capa h1{font-family:"Caveat",cursive;font-size:44px;line-height:1;margin:14px 0 6px}
+.capa p{color:var(--fraco);font-size:15px;max-width:380px;margin:0 auto}
+.selos{display:flex;gap:6px;justify-content:center;flex-wrap:wrap;margin-top:14px}
+.selos span{background:var(--card);border:1px solid var(--linha);border-radius:999px;padding:4px 11px;font-size:12px;font-weight:800;color:var(--fraco)}
+
+/* convite */
+.convite{margin-top:16px;background:var(--acento-suave);border:1px dashed var(--acento);border-radius:18px;padding:16px;text-align:center}
+.convite small{display:block;font-size:11px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:var(--acento)}
+.convite .cod{display:block;font-weight:900;font-size:34px;letter-spacing:.08em;margin:2px 0 4px}
+.convite p{font-size:13px;color:var(--fraco)}
+.convite p b{color:var(--tinta)}
+.convite button{margin-top:8px;font-size:13px;font-weight:800;color:var(--acento);text-decoration:underline}
+
+/* principal */
+.cartao{background:var(--card);border:1px solid var(--linha);border-radius:18px;padding:18px;box-shadow:var(--sombra);margin-top:14px}
+.cartao h2{font-family:"Caveat",cursive;font-size:29px;line-height:1;margin-bottom:6px}
+.exp{color:var(--fraco);font-size:14px}
+.aparelhos{display:grid;grid-template-columns:repeat(3,1fr);gap:4px;background:var(--papel);border:1px solid var(--linha);border-radius:999px;padding:4px;margin:14px 0}
+.aparelhos button{padding:9px 4px;border-radius:999px;font-weight:800;font-size:13.5px;color:var(--fraco)}
+.aparelhos button.ativo{background:var(--card);color:var(--acento);box-shadow:var(--sombra)}
+.botao{display:flex;align-items:center;justify-content:center;gap:9px;width:100%;padding:15px;border-radius:999px;background:var(--acento);
+  color:#fff;font-weight:900;font-size:16px;box-shadow:0 6px 18px rgba(var(--acRGB),.4);text-decoration:none}
+@media (prefers-color-scheme:dark){.botao{color:#16110D}}
+.botao.sec{background:var(--card);color:var(--tinta);border:1px solid var(--linha);box-shadow:none;font-weight:800;font-size:15px}
+.botao:active{transform:scale(.985)}
+.botao[disabled]{opacity:.55}
+.linha-btn{margin-top:10px}
+.passos{list-style:none;counter-reset:p;margin-top:4px}
+.passos li{counter-increment:p;position:relative;padding:12px 0 12px 46px;border-bottom:1px dashed var(--linha);font-size:15px}
+.passos li:last-child{border-bottom:0}
+.passos li::before{content:counter(p);position:absolute;left:0;top:10px;width:30px;height:30px;border-radius:50%;
+  background:var(--acento-suave);color:var(--acento);display:grid;place-items:center;font-family:"Caveat",cursive;font-size:21px;font-weight:700}
+.passos li b{font-weight:900}
+.passos li small{display:block;color:var(--fraco);font-size:13px}
+.tecla{display:inline-flex;align-items:center;gap:4px;background:var(--papel);border:1px solid var(--linha);border-radius:8px;
+  padding:1px 7px;font-weight:800;font-size:13.5px;white-space:nowrap;vertical-align:1px}
+.tecla .icone{width:15px;height:15px;stroke-width:2.2}
+.aviso{display:flex;gap:11px;align-items:flex-start;background:var(--acento-suave);border-radius:14px;padding:12px 14px;font-size:14px;margin-top:12px}
+.aviso .icone{color:var(--acento);margin-top:1px}
+.aviso.ok{background:var(--positivo-suave)}
+.aviso.ok .icone{color:var(--positivo)}
+.oculto{display:none!important}
+
+/* recursos */
+.recursos{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px}
+.rec{background:var(--papel);border-radius:14px;padding:12px}
+.rec .icone{color:var(--acento);width:22px;height:22px;margin-bottom:4px}
+.rec b{display:block;font-size:14px;font-weight:900}
+.rec span{font-size:12.5px;color:var(--fraco)}
+
+/* QR */
+.qr{display:flex;gap:16px;align-items:center}
+.qr-caixa{width:132px;height:132px;flex:none;background:#fff;border-radius:14px;padding:8px;display:grid;place-items:center;border:1px solid var(--linha)}
+.qr-caixa svg,.qr-caixa img{width:100%;height:100%}
+.qr p{font-size:14px;color:var(--fraco)}
+.qr p b{color:var(--tinta)}
+.copiar{margin-top:8px;font-size:13px;font-weight:800;color:var(--acento);text-decoration:underline}
+.rodape{text-align:center;color:var(--fraco);font-size:12px;margin-top:22px}
+#toast{position:fixed;left:50%;bottom:calc(24px + env(safe-area-inset-bottom));transform:translateX(-50%) translateY(20px);opacity:0;
+  background:var(--tinta);color:var(--papel);padding:11px 18px;border-radius:999px;font-weight:700;font-size:14px;transition:all .25s;z-index:9;pointer-events:none}
+#toast.ver{opacity:1;transform:translateX(-50%)}
+@media (max-width:380px){.recursos{grid-template-columns:1fr}.qr{flex-direction:column;text-align:center}}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<svg style="display:none" xmlns="http://www.w3.org/2000/svg">
+  <symbol id="i-baixar" viewBox="0 0 24 24"><path d="M12 4v11M7 10.5l5 5 5-5M5 19.5h14"/></symbol>
+  <symbol id="i-partilhar" viewBox="0 0 24 24"><path d="M12 15V3.5M8 7.5l4-4 4 4"/><path d="M6.5 11H5.5A1.5 1.5 0 0 0 4 12.5v7A1.5 1.5 0 0 0 5.5 21h13a1.5 1.5 0 0 0 1.5-1.5v-7a1.5 1.5 0 0 0-1.5-1.5h-1"/></symbol>
+  <symbol id="i-mais-q" viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="3.5"/><path d="M12 8.5v7M8.5 12h7"/></symbol>
+  <symbol id="i-pontos" viewBox="0 0 24 24"><circle cx="12" cy="5.5" r="1.3"/><circle cx="12" cy="12" r="1.3"/><circle cx="12" cy="18.5" r="1.3"/></symbol>
+  <symbol id="i-ok" viewBox="0 0 24 24"><path d="M5 12.5 10 17 19 7"/></symbol>
+  <symbol id="i-alerta" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7.5v5.5M12 16.4v.1"/></symbol>
+  <symbol id="i-pessoas" viewBox="0 0 24 24"><circle cx="9" cy="8.5" r="3.2"/><path d="M3 19.5a6 6 0 0 1 12 0"/><circle cx="17" cy="9.5" r="2.5"/><path d="M15.5 14.2a5 5 0 0 1 6 4.8"/></symbol>
+  <symbol id="i-agenda" viewBox="0 0 24 24"><rect x="3.5" y="5" width="17" height="16" rx="2.5"/><path d="M3.5 10h17M8 3v4M16 3v4M8 14h.01M12 14h.01M16 14h.01"/></symbol>
+  <symbol id="i-alvo" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1.5"/></symbol>
+  <symbol id="i-nuvem" viewBox="0 0 24 24"><path d="M7 18.5h10.5a4 4 0 0 0 .6-7.95A6 6 0 0 0 6.6 9.6 4.5 4.5 0 0 0 7 18.5Z"/><path d="m9.5 13.5 2 2 3.5-3.5"/></symbol>
+  <symbol id="i-abrir" viewBox="0 0 24 24"><path d="M14 4h6v6M20 4l-9 9M18 14v4.5a1.5 1.5 0 0 1-1.5 1.5h-11A1.5 1.5 0 0 1 4 18.5v-11A1.5 1.5 0 0 1 5.5 6H10"/></symbol>
+</svg>
+
+<header class="capa">
+  <img src="./icones/icone-192.png" alt="" width="96" height="96">
+  <h1>Orçamento da família</h1>
+  <p>O que entra, o que sai e o que fica — com a família toda, cada um no seu celular.</p>
+  <div class="selos"><span>Grátis</span><span>Sem anúncios</span><span>Funciona sem internet</span></div>
+</header>
+
+<main class="wrap">
+
+  <div class="convite oculto" id="convite">
+    <small>Você foi convidado para uma casa</small>
+    <span class="cod" id="convite-codigo">—</span>
+    <p>Depois de instalar, entre na sua conta e use este código em <b>Tenho um código</b>.</p>
+    <button id="convite-copiar">Copiar o código</button>
+  </div>
+
+  <!-- primeira instalação: quem vai criar a casa -->
+  <section class="cartao oculto" id="comecar">
+    <h2>Primeira vez?</h2>
+    <p class="exp">Se você é quem vai começar o orçamento da família, é assim:</p>
+    <ol class="passos">
+      <li><b>Instale o app</b> aqui embaixo.</li>
+      <li>Abra e <b>entre na sua conta</b>, com o Google ou com e-mail e senha.</li>
+      <li>Toque em <b>Criar casa</b> e dê um nome, como "Casa dos Correa".</li>
+      <li>Em <b>Ajustes → Casa e conta</b>, toque em <b>Enviar convite</b> e mande para a família.
+        <small>Quem recebe o convite cai nesta página com o código da casa já pronto.</small></li>
+    </ol>
+  </section>
+
+  <!-- já está instalado / acabou de instalar -->
+  <section class="cartao oculto" id="pronto">
+    <h2>Tudo certo!</h2>
+    <p class="exp" id="pronto-txt">O app está instalado. Procure o ícone <b>Orçamento</b> na tela do celular.</p>
+    <div class="linha-btn"><a class="botao" id="btn-abrir-pronto" href="./"><svg class="icone"><use href="#i-abrir"/></svg>Abrir o app</a></div>
+  </section>
+
+  <section class="cartao" id="instalar">
+    <h2>Instale em dois toques</h2>
+    <p class="exp">Fica na tela do celular como qualquer aplicativo, sem loja e sem ocupar espaço.</p>
+
+    <div class="aparelhos" role="tablist">
+      <button data-ap="android" role="tab">Android</button>
+      <button data-ap="iphone" role="tab">iPhone</button>
+      <button data-ap="pc" role="tab">Computador</button>
+    </div>
+
+    <!-- aviso de navegador de aplicativo (WhatsApp, Instagram…) -->
+    <div class="aviso oculto" id="aviso-embutido"><svg class="icone"><use href="#i-alerta"/></svg>
+      <div id="aviso-embutido-txt"></div></div>
+
+    <!-- botão direto (Chrome/Edge no Android e no computador) -->
+    <div id="area-botao" class="oculto">
+      <button class="botao" id="btn-instalar"><svg class="icone"><use href="#i-baixar"/></svg>Instalar o app</button>
+    </div>
+
+    <ol class="passos" id="passos"></ol>
+
+    <div class="linha-btn"><a class="botao sec" id="btn-abrir" href="./"><svg class="icone"><use href="#i-abrir"/></svg>Usar no navegador mesmo</a></div>
+  </section>
+
+  <section class="cartao">
+    <h2>O que tem dentro</h2>
+    <div class="recursos">
+      <div class="rec"><svg class="icone"><use href="#i-pessoas"/></svg><b>A família junta</b><span>Cada um entra com a sua conta, na mesma casa, por um código.</span></div>
+      <div class="rec"><svg class="icone"><use href="#i-agenda"/></svg><b>Agenda de contas</b><span>Calendário dos pagamentos, com aviso no Google Agenda.</span></div>
+      <div class="rec"><svg class="icone"><use href="#i-alvo"/></svg><b>Objetivos</b><span>Viagem, reserva, carro: cada um com meta, prazo e cofre.</span></div>
+      <div class="rec"><svg class="icone"><use href="#i-nuvem"/></svg><b>Sempre igual</b><span>O que um lança aparece no celular dos outros na hora.</span></div>
+    </div>
+  </section>
+
+  <section class="cartao" id="cartao-qr">
+    <h2>Passe para outro celular</h2>
+    <div class="qr">
+      <div class="qr-caixa" id="qr" aria-label="QR code desta página"></div>
+      <div><p>Aponte a câmera do outro celular para o código. <b id="qr-extra"></b></p>
+        <button class="copiar" id="btn-copiar-link">Copiar o link</button></div>
+    </div>
+  </section>
+
+  <p class="rodape">Orçamento da família · feito por Alan Correa</p>
+</main>
+<div id="toast"></div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcode-generator/1.4.4/qrcode.min.js"></script>
+<script>
+(() => {
+  const $ = s => document.querySelector(s);
+  const ua = navigator.userAgent || "";
+  const ehIOS = /iPhone|iPad|iPod/i.test(ua) || (/Macintosh/.test(ua) && navigator.maxTouchPoints > 1);
+  const ehAndroid = /Android/i.test(ua);
+  const embutido = /FBAN|FBAV|FB_IAB|Instagram|WhatsApp|Line\/|; wv\)|MicroMessenger|GSA\//i.test(ua);
+  const iosOutro = ehIOS && /CriOS|FxiOS|EdgiOS|OPiOS/i.test(ua);
+  const instalado = matchMedia("(display-mode: standalone)").matches || navigator.standalone === true;
+  let pedido = null;
+
+  const toast = t => { const el = $("#toast"); el.textContent = t; el.classList.add("ver"); clearTimeout(toast.t); toast.t = setTimeout(() => el.classList.remove("ver"), 2400); };
+  const copiar = async (texto, msg) => { try{ await navigator.clipboard.writeText(texto); toast(msg); }catch(e){ prompt("Copie:", texto); } };
+
+  /* ---------- convite: o código vai junto para o app ---------- */
+  const codigo = (new URLSearchParams(location.search).get("codigo") || "").toUpperCase().replace(/[^A-Z0-9]/g, "").slice(0, 8);
+  const fmt = c => c.slice(0, 4) + "-" + c.slice(4);
+  const app = new URL("./", location.href);
+  if (codigo.length === 8){
+    $("#convite").classList.remove("oculto");
+    $("#convite-codigo").textContent = fmt(codigo);
+    $("#convite-copiar").onclick = () => copiar(fmt(codigo), "Código copiado");
+    try{ localStorage.setItem("orcamentoFamilia.convite", JSON.stringify({codigo, em: Date.now()})); }catch(e){}
+    app.searchParams.set("codigo", fmt(codigo));
+  } else if (!instalado){
+    $("#comecar").classList.remove("oculto");
+  }
+  $("#btn-abrir").href = app.href;
+  $("#btn-abrir-pronto").href = app.href;
+
+  /* ---------- passos de cada aparelho ---------- */
+  const tecla = (ic, txt) => `<span class="tecla">${ic ? `<svg class="icone"><use href="#${ic}"/></svg>` : ""}${txt}</span>`;
+  const PASSOS = {
+    android: [
+      `Abra esta página no <b>Chrome</b>.`,
+      `Toque em ${tecla("i-pontos", "")} no canto de cima.<small>Os três pontinhos do Chrome.</small>`,
+      `Escolha <b>Instalar app</b> ou <b>Adicionar à tela inicial</b>.`,
+      `Confirme em <b>Instalar</b>. O ícone <b>Orçamento</b> aparece na tela.`
+    ],
+    iphone: [
+      `Abra esta página no <b>Safari</b>.`,
+      `Toque em ${tecla("i-partilhar", "Compartilhar")} na barra de baixo.`,
+      `Role e escolha ${tecla("i-mais-q", "Adicionar à Tela de Início")}.`,
+      `Toque em <b>Adicionar</b>. O ícone <b>Orçamento</b> aparece na tela.`
+    ],
+    pc: [
+      `Abra esta página no <b>Chrome</b> ou no <b>Edge</b>.`,
+      `Clique no ícone de instalar ${tecla("i-baixar", "")} no fim da barra de endereço.`,
+      `Confirme em <b>Instalar</b>. O app abre numa janela própria.`
+    ]
+  };
+  let atual = ehIOS ? "iphone" : ehAndroid ? "android" : "pc";
+  function mostrar(ap){
+    atual = ap;
+    document.querySelectorAll(".aparelhos button").forEach(b => b.classList.toggle("ativo", b.dataset.ap === ap));
+    $("#passos").innerHTML = PASSOS[ap].map(t => `<li>${t}</li>`).join("");
+    // o botão direto só existe quando o navegador oferece a instalação
+    $("#area-botao").classList.toggle("oculto", !(pedido && ap !== "iphone"));
+    // dentro do WhatsApp/Instagram não dá para instalar
+    const aviso = $("#aviso-embutido");
+    if (embutido || (iosOutro && ap === "iphone")){
+      aviso.classList.remove("oculto");
+      $("#aviso-embutido-txt").innerHTML = ehIOS
+        ? `Você abriu dentro de outro aplicativo. Toque em ${tecla("i-partilhar", "")} ou nos <b>…</b> e escolha <b>Abrir no Safari</b> — só o Safari instala no iPhone.`
+        : `Você abriu dentro de outro aplicativo. Toque nos ${tecla("i-pontos", "")} e escolha <b>Abrir no Chrome</b> (ou "Abrir no navegador") para instalar.`;
+    } else aviso.classList.add("oculto");
+  }
+  document.querySelectorAll(".aparelhos button").forEach(b => b.onclick = () => mostrar(b.dataset.ap));
+  mostrar(atual);
+
+  /* ---------- instalação direta ---------- */
+  window.addEventListener("beforeinstallprompt", e => {
+    e.preventDefault(); pedido = e; mostrar(atual);
+  });
+  $("#btn-instalar").onclick = async () => {
+    if (!pedido) return;
+    pedido.prompt();
+    const r = await pedido.userChoice.catch(() => null);
+    pedido = null; mostrar(atual);
+    if (r?.outcome === "accepted") toast("Instalando…");
+  };
+  window.addEventListener("appinstalled", () => {
+    $("#pronto").classList.remove("oculto"); $("#instalar").classList.add("oculto");
+    $("#pronto-txt").innerHTML = "Pronto! O ícone <b>Orçamento</b> já está na tela do celular." +
+      (codigo.length === 8 ? " Ao abrir, entre na sua conta: o código do convite já vai estar preenchido."
+                           : " Ao abrir, entre na sua conta e toque em <b>Criar casa</b>.");
+  });
+  if (instalado){
+    $("#pronto").classList.remove("oculto"); $("#instalar").classList.add("oculto");
+    $("#pronto-txt").textContent = "Você já está usando o app instalado.";
+  }
+
+  /* ---------- QR para outro celular ---------- */
+  const link = location.href.split("#")[0];
+  $("#qr-extra").textContent = codigo.length === 8 ? "O convite " + fmt(codigo) + " vai junto." : "";
+  $("#btn-copiar-link").onclick = () => copiar(link, "Link copiado");
+  try{
+    const q = qrcode(0, "M"); q.addData(link); q.make();
+    $("#qr").innerHTML = q.createSvgTag({cellSize: 4, margin: 0, scalable: true});
+  }catch(e){ $("#cartao-qr").classList.add("oculto"); }
+
+  /* ---------- funciona sem internet e libera o "Instalar" do navegador ---------- */
+  if ("serviceWorker" in navigator && location.protocol !== "file:") navigator.serviceWorker.register("./sw.js").catch(() => {});
+})();
+</script>
+</body>
+</html>
