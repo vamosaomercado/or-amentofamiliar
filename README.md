@@ -15,7 +15,7 @@ apagar, convidar, trocar o código, tirar alguém e mudar o nome da casa.
 | `instalar.html` | Página de instalação — é o link para divulgar e o que vai no convite |
 | `manifest.webmanifest` | Instalação como aplicativo (nome, cores, ícones) |
 | `sw.js` | Funcionamento sem internet |
-| `icones/` | Ícones do app (192, 512, maskable, iPhone e favicon) |
+| `icone-192.png`, `icone-512.png`, `icone-maskable-512.png`, `apple-touch-icon.png`, `favicon-32.png` | Ícones do app — soltos na pasta principal, junto do `index.html` |
 | `firestore.rules` | Regras de segurança do banco — cole no Firebase |
 | `firebase.json` | Só para quem publica as regras pela linha de comando |
 | `.nojekyll` | Evita o GitHub Pages processar os arquivos |
@@ -59,7 +59,8 @@ O plano gratuito (Spark) dá e sobra para uma família.
 ## 2. GitHub Pages
 
 1. Crie um repositório (ex.: `orcamento-familia`).
-2. Envie **todos** os arquivos desta pasta, mantendo a pasta `icones` e o arquivo `.nojekyll`.
+2. Envie **todos** os arquivos desta pasta, todos na pasta principal do repositório (não há subpastas),
+   inclusive o `.nojekyll`.
 3. **Settings → Pages → Source: Deploy from a branch → Branch: `main` / `(root)` → Save**.
 
 Em um ou dois minutos o app estará em `https://seuusuario.github.io/orcamento-familia/`.
@@ -71,7 +72,7 @@ Ela reconhece o aparelho (Android, iPhone ou computador) e mostra o passo a pass
 
 ### Ao publicar uma atualização
 
-Troque o número da versão na primeira linha de `sw.js` (`orcamento-v1` → `orcamento-v2`). Sem isso, os
+Troque o número da versão na primeira linha de `sw.js` (`orcamento-v2` → `orcamento-v3`). Sem isso, os
 celulares que já instalaram continuam abrindo a versão guardada.
 
 ---

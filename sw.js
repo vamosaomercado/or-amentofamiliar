@@ -1,14 +1,17 @@
 /* Orçamento da família — funcionamento sem internet.
    Ao publicar uma atualização, troque o número da VERSAO. */
-const VERSAO = "orcamento-v1";
+const VERSAO = "orcamento-v3";
 const EXTERNO = VERSAO + "-externo";
-const ESSENCIAIS = [
-  "./", "./index.html", "./instalar.html", "./manifest.webmanifest",
-  "./icones/icone-192.png", "./icones/icone-512.png", "./icones/apple-touch-icon.png", "./icones/favicon-32.png"
-];
+// sem estes o app não abre sem internet: se faltar algum, a instalação do service worker falha
+const ESSENCIAIS = ["./", "./index.html", "./manifest.webmanifest"];
+// estes ajudam, mas um arquivo faltando não pode travar o app
+const OPCIONAIS = ["./instalar.html", "./icone-192.png", "./icone-512.png", "./icone-maskable-512.png",
+  "./apple-touch-icon.png", "./favicon-32.png"];
 
 self.addEventListener("install", ev => {
-  ev.waitUntil(caches.open(VERSAO).then(c => c.addAll(ESSENCIAIS)).then(() => self.skipWaiting()));
+  ev.waitUntil(caches.open(VERSAO).then(c =>
+    c.addAll(ESSENCIAIS).then(() => Promise.all(OPCIONAIS.map(u => c.add(u).catch(() => null))))
+  ).then(() => self.skipWaiting()));
 });
 
 self.addEventListener("activate", ev => {
